@@ -41,7 +41,6 @@ def preprocess_image(image: np.ndarray, canvas_size: int, mag_ratio: bool):
 
 
 class CRAFTModel:
-    
     def __init__(
         self, 
         cache_dir: str,
@@ -70,11 +69,15 @@ class CRAFTModel:
         paths = {}
         for model_name in ['craft', 'refiner']:
             config = HF_MODELS[model_name]
-            paths[model_name] = os.path.join(cache_dir, config['filename'])
             if not local_files_only:
-                config_file_url = hf_hub_url(repo_id=config['repo_id'], filename=config['filename'])
-                cached_download(config_file_url, cache_dir=cache_dir, force_filename=config['filename'])
-            
+                paths[model_name] = hf_hub_download(
+                    repo_id=config['repo_id'],
+                    filename=config['filename'],
+                    cache_dir=cache_dir
+                )
+            else:
+                paths[model_name] = os.path.join(cache_dir, config['filename'])
+        
         self.net = init_CRAFT_model(paths['craft'], device, fp16=fp16)
         if self.use_refiner:
             self.refiner = init_refiner_model(paths['refiner'], device)
