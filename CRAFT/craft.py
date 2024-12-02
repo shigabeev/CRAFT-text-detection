@@ -87,7 +87,7 @@ class CRAFT(nn.Module):
 
 def init_CRAFT_model(chekpoint_path: str, device: str, fp16: bool = True) -> CRAFT:
     net = CRAFT()
-    net.load_state_dict(copyStateDict(torch.load(chekpoint_path, map_location=torch.device('cpu'))))
+    net.load_state_dict(copyStateDict(torch.load(chekpoint_path, map_location=torch.device('cpu'), weights_only=True)))
     if fp16:
         net = FP16Module(net)
     net = net.to(device)
