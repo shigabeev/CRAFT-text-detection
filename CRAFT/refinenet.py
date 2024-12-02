@@ -69,7 +69,7 @@ class RefineNet(nn.Module):
     
 def init_refiner_model(chekpoint_path: str, device: torch.device) -> RefineNet:
     refine_net = RefineNet()
-    refine_net.load_state_dict(copyStateDict(torch.load(chekpoint_path, map_location=torch.device('cpu'))))
+    refine_net.load_state_dict(copyStateDict(torch.load(chekpoint_path, map_location=torch.device('cpu'), weights_only=True)))
     refine_net = refine_net.to(device)
     refine_net.eval()
     return refine_net
